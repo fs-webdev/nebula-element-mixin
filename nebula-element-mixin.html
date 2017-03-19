@@ -1,0 +1,66 @@
+<!--
+@license
+Copyright (c) 2017 Ars Nebula LLC.
+This code may be used under the terms found in LICENSE.md of this repository.
+-->
+
+<script>
+(function() {
+  'use strict';
+
+  window.Nebula = window.Nebula || {}
+
+  const listeners = Symbol()
+  const debouncers = Symbol()
+
+  /**
+  * `Nebula.ElementMixin` is a set of custom element utility methods.
+  *
+  * @polymerBehavior
+  * @demo demo/index.html
+  */
+  Nebula.ElementMixin = Polymer.dedupingMixin(function(base) {
+    return class extends base {
+
+      constructor() {
+        super()
+        this[listeners] = new Map()
+        this[debouncers] = new Map()
+      }
+
+      listen(target, event, callback) {
+        target = target || this
+        if (typeof event !== 'string') throw new Error('The event is invalid')
+        if (typeof callback !== 'function') throw new Error('The callback is invalid')
+
+        const handler = callback.bind(this)
+        if (!this[listeners].has(target)) this[listeners].set(target, new Map())
+        this[listeners].get(target).set(event, handler)
+        target.addEventListener(event, handler)
+      }
+
+      unlisten(target, event) {
+        target = target || this
+        if (typeof event !== 'string') throw new Error('The event is invalid')
+
+        if (this[listeners].has(target)) {
+          if (this[listeners].get(target).has(event)) {
+            const handler = this[listeners].get(target).get(event)
+            target.removeEventListener(event, handler)
+          }
+        }
+      }
+      
+      debounce(key, callback, delay = 0) {
+        if (!key) throw new Error('The key is invalid')
+        if (typeof callback !== 'function') throw new Error('The callback is invalid')
+        
+        if (this[debouncers].has(key)) clearTimeout(this[debouncers].get(key))
+        this[debouncers].set(key, setTimeout(callback.bind(this), delay))
+      }
+
+    }
+  })
+  
+}())
+</script>

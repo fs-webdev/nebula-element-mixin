@@ -1,0 +1,64 @@
+<!--
+@license
+Copyright (c) 2017 Ars Nebula LLC.
+This code may be used under the terms found in LICENSE.md of this repository.
+-->
+
+<link rel="import" href="../../polymer/polymer-element.html">
+<link rel="import" href="../nebula-element-mixin.html">
+
+<dom-module id="demo-element">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        padding: 32px;
+        border: 1px solid red;
+      }
+    </style>
+    <button on-click="_onListen">Listen</button>
+    <button on-click="_onUnlisten">Unlisten</button>
+  </template>
+  <script>
+  (function() {
+    const mousemove = Symbol()
+    const resize = Symbol()
+
+    class DemoElement extends Nebula.ElementMixin(Polymer.Element) {
+      static get is() { return 'demo-element' }
+
+      ready() {
+        super.ready();
+      }
+
+      _onListen() {
+        console.log('listening')
+        this.listen(this, 'mousemove', this[mousemove])
+        this.listen(this, 'resize', this[resize], window)
+      }
+
+      _onUnlisten() {
+        console.log('unlistening')
+        this.unlisten(this, 'mousemove')
+        this.unlisten(window, 'resize')
+      }
+
+      [mousemove](e) {
+        this.debounce(mousemove, function() {
+          console.log(e, this)
+        }, 500)
+      }
+
+      [resize](e) {
+        this.debounce(resize, () => {
+          console.log(e, this)
+        }, 500)
+      }
+
+
+    }
+    customElements.define(DemoElement.is, DemoElement)
+    
+  }())
+  </script>
+</dom-module>

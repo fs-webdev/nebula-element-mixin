@@ -1,0 +1,21 @@
+{
+  "name": "nebula-element-mixin",
+  "version": "2.0.0",
+  "description": "A set of custom element utility methods.",
+  "license": "ISC",
+  "private": true,
+  "author": "Chris Beckett <chrisb@arsnebula.com>",
+  "homepage": "https://github.com/arsnebula/nebula-element-mixin",
+  "repository": "arsnebula/nebula-element-mixin",
+  "scripts": {
+    "test": "wct --plugin=local",
+    "test:debug": "wct --plugin=local --persistent=true",
+    "test:sauce": "wct --plugin=sauce --sauce-username=arsnebula",
+    "start": "browser-sync start -c bsconfig.js"
+  },
+  "devDependencies": {
+    "browser-sync": "latest",
+    "minimist": "latest",
+    "web-component-tester": "6.0.0-prerelease.5"
+  }
+}

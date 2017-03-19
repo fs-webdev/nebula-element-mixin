@@ -1,0 +1,32 @@
+{
+  "name": "nebula-element-mixin",
+  "description": "A set of custom element utility methods.",
+  "license": "ISC",
+  "authors": [
+    "Chris Beckett <chrisb@arsnebula.com>"
+  ],
+  "homepage": "https://github.com/arsnebula/nebula-element-mixin#README",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "keywords": [
+    "polymer",
+    "webcomponents",
+    "web-components",
+    "customelements",
+    "custom-elements"
+  ],
+  "main": "nebula-element-mixin.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#2.0.0-rc.2"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#2.0-preview",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#2.0-preview",
+    "iron-test-helpers": "PolymerElements/iron-test-helpers#2.0-preview",
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0-prerelease.5"
+  }
+}
