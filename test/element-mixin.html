@@ -32,6 +32,17 @@
             done()
           })
         })
+        test('element has fire', function(done) {
+          const detail = {message: 'test'}
+          el.addEventListener('test', (e) => {
+            assert.instanceOf(e, CustomEvent)
+            assert.equal(e.type, 'test')
+            assert.equal(e.detail, detail)
+            assert.isFalse(e.bubbles)
+            done()
+          })
+          el.fire('test', detail, {bubbles: false})
+        })
         test('element has listen', function(done) {
           el.listen(el, 'test', function() {
             assert.equal(this, el)

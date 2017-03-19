@@ -16,6 +16,42 @@ This code may be used under the terms found in LICENSE.md of this repository.
   /**
   * `Nebula.ElementMixin` is a set of custom element utility methods.
   *
+  * ## Usage
+  * 
+  * The mixin adds back many of the utility functions provided in Polymer v1 that were removed in Polymer v2 including `listen` and `unlisten`, `fire`, and `debounce`.
+  *
+  * ### Listen and Unlisten
+  *
+  * Use automatic node finding and the convenience methods listen and unlisten.
+  *
+  * ```js
+  * this.listen(this.$.myButton, 'tap', this._onTap)
+  * this.unlisten(this.$.myButton, 'tap')
+  * ```
+  *
+  * The context of the listener callback function is automatically bound to the element, and is invoked with `this` set to the element instance.
+  *
+  * WARNING: The callback parameter of the `listener` method takes a `function`, NOT a `string` containing the name of the callback handler. This change enables binding to methods with computed function names.
+  *
+  * ### Debounce
+  *
+  * Debounce collapses multiple function calls into a single invocation with a specified delay timespan.
+  *
+  * ```js
+  * this.debounce('myJob', function() { console.log('debounce') }, 500)
+  * ```
+  *
+  * The context of the debounce function is automatically bound to the element, and is invoked with `this` set to the element instance.
+  *
+  *
+  * ### Fires
+  *
+  * The fire method dispatches a `CustomEvent`.
+  *
+  * ```js
+  * this.fire('my-event', {message: 'Hello World'}, {bubbles: true})
+  * ```
+  *
   * @polymerBehavior
   * @demo demo/index.html
   */
@@ -28,6 +64,10 @@ This code may be used under the terms found in LICENSE.md of this repository.
         this[debouncers] = new Map()
       }
 
+      /**
+      * Adds an event listener to the specified target element.
+      * The event listener is automatically bound to the class context.
+      */
       listen(target, event, callback) {
         target = target || this
         if (typeof event !== 'string') throw new Error('The event is invalid')
@@ -39,6 +79,9 @@ This code may be used under the terms found in LICENSE.md of this repository.
         target.addEventListener(event, handler)
       }
 
+      /**
+      * Removes an event listener.
+      */
       unlisten(target, event) {
         target = target || this
         if (typeof event !== 'string') throw new Error('The event is invalid')
@@ -51,12 +94,24 @@ This code may be used under the terms found in LICENSE.md of this repository.
         }
       }
       
+      /**
+      * Collapses multiple function calls into a single invocation within a wait period.
+      */      
       debounce(key, callback, delay = 0) {
         if (!key) throw new Error('The key is invalid')
         if (typeof callback !== 'function') throw new Error('The callback is invalid')
         
         if (this[debouncers].has(key)) clearTimeout(this[debouncers].get(key))
         this[debouncers].set(key, setTimeout(callback.bind(this), delay))
+      }
+
+      /**
+      * Fires a custom event.
+      */
+      fire(event, detail, options) {
+        this.dispatchEvent(
+          new CustomEvent(event, Object.assign({}, {detail: detail}, options))
+        )
       }
 
     }

@@ -18,6 +18,7 @@ This code may be used under the terms found in LICENSE.md of this repository.
     </style>
     <button on-click="_onListen">Listen</button>
     <button on-click="_onUnlisten">Unlisten</button>
+    <button on-click="_onFire">Fire</button>
   </template>
   <script>
   (function() {
@@ -29,18 +30,23 @@ This code may be used under the terms found in LICENSE.md of this repository.
 
       ready() {
         super.ready();
+        this.listen(this, 'test', console.log)
       }
 
       _onListen() {
         console.log('listening')
         this.listen(this, 'mousemove', this[mousemove])
-        this.listen(this, 'resize', this[resize], window)
+        this.listen(this, 'resize', this[resize])
       }
 
       _onUnlisten() {
         console.log('unlistening')
         this.unlisten(this, 'mousemove')
         this.unlisten(window, 'resize')
+      }
+
+      _onFire() {
+        this.fire('test', {message: 'Hello World'}, {bubbles: false})
       }
 
       [mousemove](e) {
