@@ -16,6 +16,8 @@ This code may be used under the terms found in LICENSE.md of this repository.
         border: 1px solid red;
       }
     </style>
+    <input type="text" value="{{message::input}}" />
+    <button on-click="_onMessage">Message</button>
     <button on-click="_onListen">Listen</button>
     <button on-click="_onUnlisten">Unlisten</button>
     <button on-click="_onFire">Fire</button>
@@ -28,9 +30,27 @@ This code may be used under the terms found in LICENSE.md of this repository.
     class DemoElement extends Nebula.ElementMixin(Polymer.Element) {
       static get is() { return 'demo-element' }
 
+      static get properties() {
+        return {
+          'message': {
+            type: 'String'
+          }
+        }
+      }
+
+      constructor() {
+        super()
+        this.observe('message', ['message'], this._onMessage)
+      }
+
       ready() {
         super.ready();
         this.listen(this, 'test', console.log)
+        this.observe('message', ['message'], this._onMessage)
+      }
+
+      _onMessage(message) {
+        console.log(message)
       }
 
       _onListen() {

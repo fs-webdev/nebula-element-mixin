@@ -11,6 +11,13 @@ This code may be used under the terms found in LICENSE.md of this repository.
 (function() {
   class TestElement extends Nebula.ElementMixin(Polymer.Element) {
     static get is() { return 'test-element' }
+    static get properties() {
+      return {
+        message: {
+          type: String
+        }
+      }
+    }
     ready() {
       super.ready()
       this.setAttribute('hidden', '')

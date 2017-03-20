@@ -43,6 +43,13 @@
           })
           el.fire('test', detail, {bubbles: false})
         })
+        test('element has observer', function(done) {
+          el.observe('message', ['message'], (message) => {
+            assert(el.message, message)
+            done()
+          })
+          el.message = "test"
+        })
         test('element has listen', function(done) {
           el.listen(el, 'test', function() {
             assert.equal(this, el)

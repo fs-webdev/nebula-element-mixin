@@ -12,6 +12,7 @@ This code may be used under the terms found in LICENSE.md of this repository.
 
   const listeners = Symbol()
   const debouncers = Symbol()
+  const observers = Symbol()
 
   /**
   * `Nebula.ElementMixin` is a set of custom element utility methods.
@@ -20,9 +21,21 @@ This code may be used under the terms found in LICENSE.md of this repository.
   * 
   * The mixin adds back many of the utility functions provided in Polymer v1 that were removed in Polymer v2 including `listen` and `unlisten`, `fire`, and `debounce`.
   *
+  * ### Observe
+  *
+  * Use the `observe` method to add and remove observers imperatively. Each observer must be given a unique `key`, an array of observation `paths` (which can include wildcards and splices), and a `callback` handler.
+  *
+  * To observe property effects made during initialization, add them to the constructor. To observe property effects made after initialization, add them to the `ready` lifecycle callback.
+  *
+  * ```js
+  * constructor() {
+  *   super()
+  *   this.observe('myData', ['myData.*'], this._onDataChanged) 
+  * } 
+  *
   * ### Listen and Unlisten
   *
-  * Use automatic node finding and the convenience methods listen and unlisten.
+  * The Use automatic node finding and the convenience methods listen and unlisten.
   *
   * ```js
   * this.listen(this.$.myButton, 'tap', this._onTap)
@@ -62,6 +75,31 @@ This code may be used under the terms found in LICENSE.md of this repository.
         super()
         this[listeners] = new Map()
         this[debouncers] = new Map()
+        this[observers] = new Map()
+      }
+
+      /**
+      * Creates a method observer imperatively for the specified key.
+      * To receive property effects during initialization, add observers in the element `constructor`.
+      * To defer property effects until after initialization, add observers in the element `ready` callback.
+      */
+      observe(key, paths, callback) {
+        if (!(key)) throw new Error('The observer key is invalid')
+        if (!(Array.isArray(paths))) throw new Error('The observer property paths array is invalid')
+        if (!(typeof callback === 'function')) throw new Error('The observer callback function is invalid')
+
+        this[observers].set(key, callback)
+        this._createMethodObserver(`_observe('${key}',${paths.toString(',')})`)
+      }
+
+      /**
+      * Delegate observer method to resolve observer by key and invoke callback.
+      */
+      _observe(key, ...params) {
+        if (this[observers].has(key)) {
+          let callback = this[observers].get(key)
+          callback.apply(this, params)
+        }
       }
 
       /**
@@ -70,8 +108,8 @@ This code may be used under the terms found in LICENSE.md of this repository.
       */
       listen(target, event, callback) {
         target = target || this
-        if (typeof event !== 'string') throw new Error('The event is invalid')
-        if (typeof callback !== 'function') throw new Error('The callback is invalid')
+        if (typeof event !== 'string') throw new Error('The event name is invalid')
+        if (typeof callback !== 'function') throw new Error('The listener callback is invalid')
 
         const handler = callback.bind(this)
         if (!this[listeners].has(target)) this[listeners].set(target, new Map())
@@ -84,7 +122,7 @@ This code may be used under the terms found in LICENSE.md of this repository.
       */
       unlisten(target, event) {
         target = target || this
-        if (typeof event !== 'string') throw new Error('The event is invalid')
+        if (typeof event !== 'string') throw new Error('The event is name is invalid')
 
         if (this[listeners].has(target)) {
           if (this[listeners].get(target).has(event)) {
@@ -98,8 +136,8 @@ This code may be used under the terms found in LICENSE.md of this repository.
       * Collapses multiple function calls into a single invocation within a wait period.
       */      
       debounce(key, callback, delay = 0) {
-        if (!key) throw new Error('The key is invalid')
-        if (typeof callback !== 'function') throw new Error('The callback is invalid')
+        if (!key) throw new Error('The debounce key is invalid')
+        if (typeof callback !== 'function') throw new Error('The debounce callback is invalid')
         
         if (this[debouncers].has(key)) clearTimeout(this[debouncers].get(key))
         this[debouncers].set(key, setTimeout(callback.bind(this), delay))
