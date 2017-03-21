@@ -13,9 +13,16 @@ This code may be used under the terms found in LICENSE.md of this repository.
     static get is() { return 'test-element' }
     static get properties() {
       return {
-        message: {
-          type: String
-        }
+        detail: {
+          type: Object,
+          value: function() {
+            return {
+              timestamp: Math.floor(Date.now() / 1000)
+            }
+          }
+        },
+        message: String,
+        length: Number
       }
     }
     ready() {

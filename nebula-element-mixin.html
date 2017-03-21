@@ -13,49 +13,57 @@ This code may be used under the terms found in LICENSE.md of this repository.
   const listeners = Symbol()
   const debouncers = Symbol()
   const observers = Symbol()
+  const computed = Symbol()
+  const hash = Symbol()
 
   /**
   * `Nebula.ElementMixin` is a set of custom element utility methods.
   *
   * ## Usage
   * 
-  * The mixin adds back many of the utility functions provided in Polymer v1 that were removed in Polymer v2 including `listen` and `unlisten`, `fire`, and `debounce`.
+  * The mixin adds utility functions similar to those provided in Polymer v1, that were removed in Polymer v2 including `listen` and `unlisten`, `fire`, and `debounce`. It also provides the ability to define property observers and computed properties imperatively using `observe` and `compute`.
   *
   * ### Observe
   *
-  * Use the `observe` method to add and remove observers imperatively. Each observer must be given a unique `key`, an array of observation `paths` (which can include wildcards and splices), and a `callback` handler.
-  *
-  * To observe property effects made during initialization, add them to the constructor. To observe property effects made after initialization, add them to the `ready` lifecycle callback.
+  * The `observe` method adds a property observer imperatively. The callback function context is automatically bound to the element.
   *
   * ```js
   * constructor() {
   *   super()
-  *   this.observe('myData', ['myData.*'], this._onDataChanged) 
+  *   this.observe('myProp, myProp2.*, myProp3.splices', this._onDataChanged) 
+  * }
+  * ```
+  *
+  * To trigger observer callbacks during element initialization, add them to the constructor. To trigger observer callbacks after element initialization, add them to the `ready` lifecycle callback.
+  *
+  * ### Compute
+  *
+  * The `compute` method adds a computed property binding imperatively. The callback context is automatically bound to the element.
+  *
+  * ```js
+  * constructor() {
+  *   super()
+  *   this.compute('myProperty', 'prop1, prop2', this._computeMyProperty) 
   * } 
+  *
+  * To trigger computed property handlers during initialization, add them to the constructor. To trigger computed property callbacks after element initialization, add them to the `ready` lifecycle callback.
   *
   * ### Listen and Unlisten
   *
-  * The Use automatic node finding and the convenience methods listen and unlisten.
+  * The 'listen' and 'unlisten' methods add and remove event listeners with the context automatically bound to the element. When the callback invoked, `this` will be set to the element instance.
   *
   * ```js
-  * this.listen(this.$.myButton, 'tap', this._onTap)
-  * this.unlisten(this.$.myButton, 'tap')
+  * this.listen(this, 'tap', this._onTap)
+  * this.unlisten(this, 'tap')
   * ```
-  *
-  * The context of the listener callback function is automatically bound to the element, and is invoked with `this` set to the element instance.
-  *
-  * WARNING: The callback parameter of the `listener` method takes a `function`, NOT a `string` containing the name of the callback handler. This change enables binding to methods with computed function names.
   *
   * ### Debounce
   *
-  * Debounce collapses multiple function calls into a single invocation with a specified delay timespan.
+  * The `debounce` method collapses multiple function calls into a single invocation with a specified delay timespan. The callback context is automatically bound to the element.
   *
   * ```js
   * this.debounce('myJob', function() { console.log('debounce') }, 500)
   * ```
-  *
-  * The context of the debounce function is automatically bound to the element, and is invoked with `this` set to the element instance.
-  *
   *
   * ### Fires
   *
@@ -74,31 +82,88 @@ This code may be used under the terms found in LICENSE.md of this repository.
       constructor() {
         super()
         this[listeners] = new Map()
+        this[computed] = new Map()
         this[debouncers] = new Map()
         this[observers] = new Map()
       }
 
       /**
-      * Creates a method observer imperatively for the specified key.
-      * To receive property effects during initialization, add observers in the element `constructor`.
-      * To defer property effects until after initialization, add observers in the element `ready` callback.
+      * Generates a numeric hash for a string for use as an auto-generated key.
       */
-      observe(key, paths, callback) {
-        if (!(key)) throw new Error('The observer key is invalid')
-        if (!(Array.isArray(paths))) throw new Error('The observer property paths array is invalid')
-        if (!(typeof callback === 'function')) throw new Error('The observer callback function is invalid')
+      [hash](value) {
+        if (typeof value !== 'string' && value.length === 0) return
+        let hash
+        for (let i = 0, len = value.length; i < len; i++) {
+          let charCode = value.charCodeAt(i)
+          hash  = ((hash << 5) - hash) + charCode
+          hash |= 0
+        }
+        return Math.abs(hash).toString()
+      }
+
+      /**
+      * Creates a method observer imperatively for the specified properties.
+      * To receive property effects during initialization, add in the element `constructor`.
+      * To defer property effects until after initialization, add in the element `ready` callback.
+      */
+      observe(source, callback) {
+        if (!(typeof source === 'string' && source.length > 0)) {
+          throw new Error('The source properties expression is missing or invalid')
+        }
+
+        if (typeof callback !== 'function') {
+          throw new Error('The callback function is missing or invalid')
+        }
+
+        const key = this[hash](source)
+        const exp = `__observe('${key}', ${source})`
 
         this[observers].set(key, callback)
-        this._createMethodObserver(`_observe('${key}',${paths.toString(',')})`)
+        this._createMethodObserver(exp)
       }
 
       /**
       * Delegate observer method to resolve observer by key and invoke callback.
       */
-      _observe(key, ...params) {
+      __observe(key, ...params) {
         if (this[observers].has(key)) {
           let callback = this[observers].get(key)
           callback.apply(this, params)
+        }
+      }
+
+      /**
+      * Creates a computed method imperatively for the specified properties.
+      * To receive property effects during initialization, add in the element `constructor`.
+      * To defer property effects until after initialization, add in the element `ready` callback.
+      */
+      compute(property, source, callback) {
+        if (typeof property !== 'string') {
+          throw new Error('The property name is missing or invalid')
+        }
+
+        if (!(typeof source === 'string' && source.length > 0)) {
+          throw new Error('The source properties expression is missing or invalid')
+        }
+
+        if (typeof callback !== 'function') {
+          throw new Error('The callback function is missing or invalid')
+        }
+
+        const key = this[hash](source)
+        const exp = `__compute('${key}', ${source})`
+
+        this[computed].set(key, callback)
+        this._createComputedProperty(property, exp)
+      }
+
+      /**
+      * Delegate computed method to resolve computed function by key and invoke callback.
+      */
+      __compute(key, ...params) {
+        if (this[computed].has(key)) {
+          let callback = this[computed].get(key)
+          return callback.apply(this, params)
         }
       }
 
@@ -108,12 +173,19 @@ This code may be used under the terms found in LICENSE.md of this repository.
       */
       listen(target, event, callback) {
         target = target || this
-        if (typeof event !== 'string') throw new Error('The event name is invalid')
-        if (typeof callback !== 'function') throw new Error('The listener callback is invalid')
+
+        if (!(typeof event === 'string' && event.length > 0)) {
+          throw new Error('The event name is missing or invalid')
+        }
+
+        if (typeof callback !== 'function') {
+          throw new Error('The callback function is missing or invalid')
+        }
 
         const handler = callback.bind(this)
         if (!this[listeners].has(target)) this[listeners].set(target, new Map())
         this[listeners].get(target).set(event, handler)
+
         target.addEventListener(event, handler)
       }
 
@@ -122,7 +194,10 @@ This code may be used under the terms found in LICENSE.md of this repository.
       */
       unlisten(target, event) {
         target = target || this
-        if (typeof event !== 'string') throw new Error('The event is name is invalid')
+        
+        if (!(typeof event === 'string' && event.length > 0)) {
+          throw new Error('The event name is missing or invalid')
+        }
 
         if (this[listeners].has(target)) {
           if (this[listeners].get(target).has(event)) {
@@ -136,10 +211,16 @@ This code may be used under the terms found in LICENSE.md of this repository.
       * Collapses multiple function calls into a single invocation within a wait period.
       */      
       debounce(key, callback, delay = 0) {
-        if (!key) throw new Error('The debounce key is invalid')
-        if (typeof callback !== 'function') throw new Error('The debounce callback is invalid')
-        
-        if (this[debouncers].has(key)) clearTimeout(this[debouncers].get(key))
+        if (!(typeof key === 'string' && key.length > 0)) {
+          throw new Error('The key is missing or invalid')
+        }
+        if (typeof callback !== 'function') {
+          throw new Error('The callback function is missing or invalid')
+        }
+
+        if (this[debouncers].has(key)) {
+          clearTimeout(this[debouncers].get(key))
+        }
         this[debouncers].set(key, setTimeout(callback.bind(this), delay))
       }
 
@@ -147,6 +228,9 @@ This code may be used under the terms found in LICENSE.md of this repository.
       * Fires a custom event.
       */
       fire(event, detail, options) {
+        if (!(typeof event === 'string' && event.length > 0)) {
+          throw new Error('The event name is missing or invalid')
+        }
         this.dispatchEvent(
           new CustomEvent(event, Object.assign({}, {detail: detail}, options))
         )

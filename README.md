@@ -19,34 +19,53 @@ Import the package.
 Add the mixin to an element.
 
 ```js
-class MyElement extends Nebula.ElementMixin(Polymer.Element) {
+class MyElement extends Nebula.ElementMixin(Polymer.Element) {}
+```
 
+The mixin adds utility functions similar to those provided in Polymer v1, that were removed in Polymer v2 including `listen` and `unlisten`, `fire`, and `debounce`. It also provides the ability to define property observers and computed properties imperatively using `observe` and `compute`.
+
+### Observe
+
+Use the `observe` method allows adding a property observer imperatively. Each observer must include a string expression containing one or more properties (can include wildcards and splices), and a callback function. The callback function context is automatically bound to the element.
+
+```js
+constructor() {
+  super()
+  this.observe('myProp, myProp2.*, myProp3.splices', this._onDataChanged) 
 }
 ```
 
-The mixin adds back many of the utility functions provided in Polymer v1 that were removed in Polymer v2 including `listen` and `unlisten`, `fire`, and `debounce`.
+To trigger observer callbacks during element initialization, add them to the constructor. To trigger observer callbacks after element initialization, add them to the `ready` lifecycle callback.
+
+### Compute
+
+Use the `compute` method adds a computed property binding imperatively. The callback context is automatically bound to the element.
+
+```js
+constructor() {
+  super()
+  this.compute('myProperty', 'prop1, prop2', this._computeMyProperty) 
+} 
+```
+
+To trigger computed property handlers during initialization, add them to the constructor. To trigger computed property callbacks after element initialization, add them to the `ready` lifecycle callback.
 
 ### Listen and Unlisten
 
-Use automatic node finding and the convenience methods listen and unlisten.
+The 'listen' and 'unlisten' methods add and remove event listeners with the context automatically bound to the element. When the callback invoked, `this` will be set to the element instance.
+
 ```js
-this.listen(this.$.myButton, 'tap', this._onTap)
-this.unlisten(this.$.myButton, 'tap')
+this.listen(this, 'tap', this._onTap)
+this.unlisten(this, 'tap')
 ```
-
-The context of the listener callback function is automatically bound to the element, and is invoked with `this` set to the element instance.
-
-WARNING: The callback parameter of the `listener` method takes a `function`, NOT a `string` containing the name of the callback handler. This change enables binding to methods with computed function names.
 
 ### Debounce
 
-Debounce collapses multiple function calls into a single invocation with a specified delay timespan.
+Debounce collapses multiple function calls into a single invocation with a specified delay timespan. The callback context is automatically bound to the element.
 
 ```js
 this.debounce('myJob', function() { console.log('debounce') }, 500)
 ```
-
-The context of the debounce function is automatically bound to the element, and is invoked with `this` set to the element instance.
 
 ### Fires
 

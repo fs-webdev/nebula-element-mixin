@@ -17,6 +17,7 @@ This code may be used under the terms found in LICENSE.md of this repository.
       }
     </style>
     <input type="text" value="{{message::input}}" />
+    <p>Length: {{length}}</p>
     <button on-click="_onMessage">Message</button>
     <button on-click="_onListen">Listen</button>
     <button on-click="_onUnlisten">Unlisten</button>
@@ -24,29 +25,36 @@ This code may be used under the terms found in LICENSE.md of this repository.
   </template>
   <script>
   (function() {
-    const mousemove = Symbol()
-    const resize = Symbol()
+    const onResize = Symbol()
 
     class DemoElement extends Nebula.ElementMixin(Polymer.Element) {
       static get is() { return 'demo-element' }
 
       static get properties() {
         return {
-          'message': {
-            type: 'String'
+          message: String,
+          length: {
+            type: Number,
+            notify: true
           }
         }
       }
 
       constructor() {
         super()
-        this.observe('message', ['message'], this._onMessage)
+        this.observe('message', this._onMessage)
+        this.compute('length',  'message', this._computeLength)
       }
 
       ready() {
         super.ready();
         this.listen(this, 'test', console.log)
-        this.observe('message', ['message'], this._onMessage)
+      }
+
+      _computeLength(message) {
+        if (message) {
+          return message.length
+        }        
       }
 
       _onMessage(message) {
@@ -54,13 +62,11 @@ This code may be used under the terms found in LICENSE.md of this repository.
       }
 
       _onListen() {
-        console.log('listening')
-        this.listen(this, 'mousemove', this[mousemove])
-        this.listen(this, 'resize', this[resize])
+        this.listen(this, 'mousemove', this._onMouseMove)
+        this.listen(this, 'resize', this[onResize])
       }
 
       _onUnlisten() {
-        console.log('unlistening')
         this.unlisten(this, 'mousemove')
         this.unlisten(window, 'resize')
       }
@@ -69,18 +75,17 @@ This code may be used under the terms found in LICENSE.md of this repository.
         this.fire('test', {message: 'Hello World'}, {bubbles: false})
       }
 
-      [mousemove](e) {
-        this.debounce(mousemove, function() {
+      _onMouseMove(e) {
+        this.debounce('mousemove', function() {
           console.log(e, this)
         }, 500)
       }
 
-      [resize](e) {
-        this.debounce(resize, () => {
+      [onResize](e) {
+        this.debounce('resize', function() {
           console.log(e, this)
-        }, 500)
+        }, 5000)
       }
-
 
     }
     customElements.define(DemoElement.is, DemoElement)

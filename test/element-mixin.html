@@ -43,12 +43,34 @@
           })
           el.fire('test', detail, {bubbles: false})
         })
-        test('element has observer', function(done) {
-          el.observe('message', ['message'], (message) => {
-            assert(el.message, message)
+        test('element supports single property observer', function(done) {
+          el.observe('message', (message) => {
+            assert.equal(el.message, message)
             done()
           })
           el.message = "test"
+        })
+        test('element supports multi-property observer', function(done) {
+          el.observe('message, detail.*', (message, detail) => {
+            assert.equal(el.message, message)
+            assert.isOk(el.detail)
+            done()
+          })
+          el.setProperties({
+            message: "test",
+            detail: {
+              timestamp: Math.floor(Date.now() / 1000)
+            }
+          })
+        })
+        test('element supports computed property', function(done) {
+          el.compute('length', 'message', (message) => {
+            assert.equal(el.message, message)
+            done()
+          })
+          el.setProperties({
+            message: "test"
+          })
         })
         test('element has listen', function(done) {
           el.listen(el, 'test', function() {
