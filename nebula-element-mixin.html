@@ -131,6 +131,7 @@
        * @param {EventTarget} target - The target element of the event listener.
        * @param {string} eventType - The name of the event type to listen to.
        * @param {function()} callback - The callback function to invoke when the event is triggered.
+       * @protected
        */
       [_listen](target, eventType, callback) {
         target = target || this
@@ -186,12 +187,13 @@
        * @param {string} eventType - The name of the event to fire.
        * @param {*} detail - The value to assign the the custom event detail property.
        * @param {Object} options - The event options.
+       * @returns {boolean} The return value is false if event is cancelable and at least one of the event handlers which handled this event called `preventDefault`; otherwise it returns true.
        * @protected 
        */
       [_fire](eventType, detail, options) {
         if (!(typeof eventType === 'string' && eventType.length > 0)) throw InvalidArgumentError('eventType')
         
-        this.dispatchEvent(
+        return this.dispatchEvent(
           new CustomEvent(eventType, Object.assign({}, {detail: detail}, options))
         )
       }

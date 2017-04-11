@@ -28,6 +28,6 @@
     "polymer": "Polymer/polymer#>=2.0.0-rc.1 <3.0"
   },
   "devDependencies": {
-    "web-component-tester": "Polymer/web-component-tester"
+    "web-component-tester": "Polymer/web-component-tester#latest"
   }
 }

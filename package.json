@@ -13,6 +13,6 @@
     "test:sauce": "wct --plugin=sauce"
   },
   "devDependencies": {
-    "web-component-tester": "Polymer/web-component-tester"
+    "web-component-tester": "Polymer/web-component-tester#latest"
   }
 }
