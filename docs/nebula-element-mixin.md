@@ -108,7 +108,7 @@ const fire = Symbol.for('Nebula.ElementMixin.fire')
 this[fire]('my-event', {message: 'Hello World'}, {bubbles: true})
 ```
 
-### [listen](target, eventType, callback)
+#### [listen](target, eventType, callback)
 
 Adds an event listener to the target object. The callback context is automatically bound to the element. When the callback is invoked, `this` will be set to the element instance.
 
@@ -130,7 +130,7 @@ this[observe]('myProp, myProp2.*, myProp3.splices', callback)
 
 To trigger observer callbacks during element initialization, add them to the constructor. To trigger observer callbacks after element initialization, add them to the `ready` lifecycle callback.
 
-### [unlisten](target, eventType)
+#### [unlisten](target, eventType)
 
 Removes an event listener on the target object.
 
