@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html>
   <head>
     <title>nebula-element-mixin</title>
@@ -7,7 +6,6 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
     <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
-    <link rel="import" href="../../iron-test-helpers/iron-test-helpers.html">
     <link rel="import" href="test-element.html">
   </head>
   <body>
@@ -19,7 +17,14 @@
 
     <script>
       suite('basic', function() {
-        var el
+        const _observe = Symbol.for('Nebula.ElementMixin.observe')
+        const _compute = Symbol.for('Nebula.ElementMixin.compute')
+        const _listen = Symbol.for('Nebula.ElementMixin.listen')
+        const _unlisten = Symbol.for('Nebula.ElementMixin.unlisten')
+        const _fire = Symbol.for('Nebula.ElementMixin.fire')
+        const _debounce = Symbol.for('Nebula.ElementMixin.debounce')
+        let el
+
         setup(function() {
           el = fixture('basic')
         })
@@ -27,7 +32,7 @@
           assert.equal(el.constructor.is, 'test-element')
         })
         test('element has debounce', function(done) {
-          el.debounce('test', function() {
+          el[_debounce]('test', function() {
             assert.equal(this, el)
             done()
           })
@@ -41,17 +46,17 @@
             assert.isFalse(e.bubbles)
             done()
           })
-          el.fire('test', detail, {bubbles: false})
+          el[_fire]('test', detail, {bubbles: false})
         })
         test('element supports single property observer', function(done) {
-          el.observe('message', (message) => {
+          el[_observe]('message', (message) => {
             assert.equal(el.message, message)
             done()
           })
           el.message = "test"
         })
         test('element supports multi-property observer', function(done) {
-          el.observe('message, detail.*', (message, detail) => {
+          el[_observe]('message, detail.*', (message, detail) => {
             assert.equal(el.message, message)
             assert.isOk(el.detail)
             done()
@@ -64,7 +69,7 @@
           })
         })
         test('element supports computed property', function(done) {
-          el.compute('length', 'message', (message) => {
+          el[_compute]('length', 'message', (message) => {
             assert.equal(el.message, message)
             done()
           })
@@ -73,18 +78,18 @@
           })
         })
         test('element has listen', function(done) {
-          el.listen(el, 'test', function() {
+          el[_listen](el, 'test', function() {
             assert.equal(this, el)
             done()
           })
           el.dispatchEvent(new Event('test'))
         })
         test('element has unlisten', function(done) {
-          el.listen(el, 'test', function() {
+          el[_listen](el, 'test', function() {
             assert.fail('Test event received', 'Test event not received')
             done()
           })
-          el.unlisten(el, 'test')
+          el[_unlisten](el, 'test')
           el.dispatchEvent(new Event('test'))
           setTimeout(() => {
             done()
