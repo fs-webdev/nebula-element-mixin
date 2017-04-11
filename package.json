@@ -10,12 +10,9 @@
   "scripts": {
     "test": "wct --plugin=local",
     "test:debug": "wct --plugin=local --persistent=true",
-    "test:sauce": "wct --plugin=sauce --sauce-username=arsnebula",
-    "start": "browser-sync start -c bsconfig.js"
+    "test:sauce": "wct --plugin=sauce --sauce-username=arsnebula"
   },
   "devDependencies": {
-    "browser-sync": "latest",
-    "minimist": "latest",
-    "web-component-tester": "6.0.0-prerelease.5"
+    "web-component-tester": "Polymer/web-component-tester"
   }
 }

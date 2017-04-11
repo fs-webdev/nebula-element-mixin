@@ -1,13 +1,13 @@
 const pkg = require('./package.json');
-const argv = require('minimist')(process.argv.slice(2));
 const build = `${pkg.name} v${pkg.version} (${Math.round(new Date().getTime() / 1000)})`
+const persistent = process.argv.includes('--persistent')
 
 console.log(`BUILD: ${build}`)
 
 module.exports = {
   verbose: false,
   expanded: true,
-  persistent: argv.persistent || false,
+  persistent: persistent,
   simpleOutput: true,
   plugins: {
     local: {

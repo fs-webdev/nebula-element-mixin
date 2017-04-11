@@ -1,3 +1,9 @@
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-green.svg)](https://www.webcomponents.org/element/arsnebula/nebula-element-mixin)
+[![Polymer Version](https://img.shields.io/badge/polymer-v2-blue.svg)](https://www.polymer-project.org)
+[![Sauce Labs Build Status](https://img.shields.io/badge/saucelabs-passing-red.svg)](https://saucelabs.com/beta/builds/b4cb6381709548f7bbf933f463476d58)
+[![Gitter Chat](https://badges.gitter.im/org.png)](https://gitter.im/arsnebula/webcomponents)
+[![Become a Patreon](https://img.shields.io/badge/patreon-support_us-orange.svg)](https://www.patreon.com/arsnebula)
+
 # \<nebula-element-mixin\>
 
 A set of custom element utility methods.
@@ -8,7 +14,15 @@ A set of custom element utility methods.
 $ bower install -S arsnebula/nebula-element-mixin
 ```
 
-## Usage
+## Browser Compatability
+
+Tests is performed for the latest release version of all browsers that support native ES2015. Support for older browsers will require transpiling and loading appropriate polyfills.
+
+![Edge](https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_24x24.png)<br>Edge | ![Firefox](https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_24x24.png)<br>Firefox | ![Chrome](https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_24x24.png)<br>Chrome | ![Safari](https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_24x24.png)<br>Safari
+:---------: | :---------: | :---------: | :---------:
+latest | latest| latest | latest
+
+## Getting Started
 
 Import the package.
 
@@ -22,62 +36,19 @@ Add the mixin to an element.
 class MyElement extends Nebula.ElementMixin(Polymer.Element) {}
 ```
 
-The mixin adds utility functions similar to those provided in Polymer v1, that were removed in Polymer v2 including `listen` and `unlisten`, `fire`, and `debounce`. It also provides the ability to define property observers and computed properties imperatively using `observe` and `compute`.
-
-### Observe
-
-Use the `observe` method allows adding a property observer imperatively. Each observer must include a string expression containing one or more properties (can include wildcards and splices), and a callback function. The callback function context is automatically bound to the element.
-
-```js
-constructor() {
-  super()
-  this.observe('myProp, myProp2.*, myProp3.splices', this._onDataChanged) 
-}
-```
-
-To trigger observer callbacks during element initialization, add them to the constructor. To trigger observer callbacks after element initialization, add them to the `ready` lifecycle callback.
-
-### Compute
-
-Use the `compute` method adds a computed property binding imperatively. The callback context is automatically bound to the element.
-
-```js
-constructor() {
-  super()
-  this.compute('myProperty', 'prop1, prop2', this._computeMyProperty) 
-} 
-```
-
-To trigger computed property handlers during initialization, add them to the constructor. To trigger computed property callbacks after element initialization, add them to the `ready` lifecycle callback.
-
-### Listen and Unlisten
-
-The 'listen' and 'unlisten' methods add and remove event listeners with the context automatically bound to the element. When the callback invoked, `this` will be set to the element instance.
-
-```js
-this.listen(this, 'tap', this._onTap)
-this.unlisten(this, 'tap')
-```
-
-### Debounce
-
-Debounce collapses multiple function calls into a single invocation with a specified delay timespan. The callback context is automatically bound to the element.
-
-```js
-this.debounce('myJob', function() { console.log('debounce') }, 500)
-```
-
-### Fires
-
-The fire method dispatches a `CustomEvent`.
-
-```js
-this.fire('my-event', {message: 'Hello World'}, {bubbles: true})
-```
-
-*For more information on element properties and methods see the element API documentation.*
+*For more information, see the API documentation.*
 
 ## Contributing
+
+We welcome and appreciate feedback from the community. Here are a few ways that you can show your appreciation for this package:
+
+* Give us a **Star on GitHub** from either [webcomponents.org](https://www.webcomponents.org/element/arsnebula/nebula-element-mixin) or directly on [GitHub](https://github.com/arsnebula/nebula-element-mixin).
+
+* Submit a feature request, or a defect report on the [Issues List](https://www.webcomponents.org/element/arsnebula/nebula-element-mixin/issues).
+
+* Become a [Patreon](https://www.patreon.com/arsnebula). It takes a lot of time and effort to develop, document, test and support the elements in our [Nebula Essentials](https://www.webcomponents.org/collection/arsnebula/nebula-essentials) collection. Your financial contribution will help ensure that our entire collection continues to grow and improve.
+
+If you are a developer, and are interested in making a code contribution, consider opening an issue first to describe the change, and discuss with the core repository maintainers. Once you are ready, prepare a pull request:
 
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
