@@ -1,26 +1,18 @@
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-green.svg)](https://www.webcomponents.org/element/arsnebula/nebula-element-mixin)
 [![Polymer Version](https://img.shields.io/badge/polymer-v2-blue.svg)](https://www.polymer-project.org)
-[![Sauce Labs Build Status](https://img.shields.io/badge/saucelabs-passing-red.svg)](https://saucelabs.com/beta/builds/b4cb6381709548f7bbf933f463476d58)
+[![Sauce Labs Build Status](https://img.shields.io/badge/saucelabs-passing-red.svg)](https://saucelabs.com/beta/builds/7f17104034e047eaab7bc58f7dfdddc8)
 [![Gitter Chat](https://badges.gitter.im/org.png)](https://gitter.im/arsnebula/webcomponents)
 [![Become a Patreon](https://img.shields.io/badge/patreon-support_us-orange.svg)](https://www.patreon.com/arsnebula)
 
 # \<nebula-element-mixin\>
 
-A set of custom element utility methods.
+A set of custom element utility methods. This package is part of the [Nebula Essentials](https://www.webcomponents.org/collection/arsnebula/nebula-essentials) collection.
 
 ## Installation
 
 ```sh
 $ bower install -S arsnebula/nebula-element-mixin
 ```
-
-## Browser Compatability
-
-Tests is performed for the latest release version of all browsers that support native ES2015. Support for older browsers will require transpiling and loading appropriate polyfills.
-
-![Edge](https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_24x24.png)<br>Edge | ![Firefox](https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_24x24.png)<br>Firefox | ![Chrome](https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_24x24.png)<br>Chrome | ![Safari](https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_24x24.png)<br>Safari
-:---------: | :---------: | :---------: | :---------:
-latest | latest| latest | latest
 
 ## Getting Started
 

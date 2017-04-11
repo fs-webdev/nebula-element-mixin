@@ -10,7 +10,7 @@
   "scripts": {
     "test": "wct --plugin=local",
     "test:debug": "wct --plugin=local --persistent=true",
-    "test:sauce": "wct --plugin=sauce --sauce-username=arsnebula"
+    "test:sauce": "wct --plugin=sauce"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester"

@@ -19,12 +19,12 @@ module.exports = {
       name: pkg.name,
       build: build,
       browsers: [{
-        browserName: 'Chrome',
+        browserName: 'chrome',
         platform: 'Windows 10',
         version: 'latest'
       }, {
         browserName: 'firefox',
-        platform: 'Windows 10',
+        platform: 'Linux',
         version: 'latest'
       }, {
         browserName: 'MicrosoftEdge',
