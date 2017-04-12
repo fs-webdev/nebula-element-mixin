@@ -1,79 +1,12 @@
 # Nebula.ElementMixin
 
-`Nebula.ElementMixin` is a Polymer Project [Class Expression Mixin](https://www.polymer-project.org/2.0/docs/devguide/custom-elements#mixins) that extends a custom element with a set of utility methods. The mixin adds utility functions similar to those provided in Polymer v1 (that were removed in Polymer v2) including `listen` and `unlisten`, `fire`, and `debounce`. It also provides the ability to define property observers and computed properties imperatively using `observe` and `compute`.
+`Nebula.ElementMixin` is a Polymer Project [Class Expression Mixin](https://www.polymer-project.org/2.0/docs/devguide/custom-elements#mixins) that extends a custom element with a set of utility methods. 
 
-JavaScript does not have explicit support for private or protected methods. To avoid conflicts, Nebula elements and mixins use [Symbols](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol), a new feature of ES2015 that provides the ability to define methods with tokens that are guaranteed to be unique. The use of symbols provide better conflict protection than the commonly used naming convention based on prefixing methods with underscores. Protected methods are defined using `Symbol.for` to add or retrieve them from the global registry, and private methods are defined using `Symbol` to create a symbol for local use only.
+The mixin adds utility functions similar to those provided in Polymer v1 (that were removed in Polymer v2) including `listen` and `unlisten`, `fire`, and `debounce`. It also provides the ability to define property observers and computed properties imperatively using `observe` and `compute`.
 
-The following example demonstrates how to to retrieve symbols for calling the protected methods provided by this mixin, and how you utilize symbols in your own elements.
+The API utilizes [Symbols](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol), a new feature of ES2015 that enables new semantics for protected and private class members. Protected methods are defined using `Symbol.for` to add or retrieve them from the global registry, and private methods are defined using a local `Symbol`. To invoke any of the protected methods of the mixin, retrieve the global symbol, and invoke the computed function name.
 
-```html
-<link rel="import" href="../nebula-element-mixin/nebula-element-mixin.html">
-
-<script>
-(function() {
-
-  const _observe = Symbol.for('Nebula.ElementMixin.observe')
-  const _compute = Symbol.for('Nebula.ElementMixin.compute')
-  const _listen = Symbol.for('Nebula.ElementMixin.listen')
-  const _unlisten = Symbol.for('Nebula.ElementMixin.unlisten')
-  const _fire = Symbol.for('Nebula.ElementMixin.fire')
-  const _debounce = Symbol.for('Nebula.ElementMixin.debounce')
-
-  const __onResize = Symbol()
-  const __onSizeChanged = Symbol()
-  const __computeOrientation = Symbol()
-
-  class WindowSize extends Nebula.ElementMixin(Polymer.Element) {
-    static get is() { return 'window-size' }
-
-    static get properties() {
-      return {
-        size: Object,
-        orientation: String
-      }
-    }
-
-    constructor() {
-      super.ready()
-      this[_observe]('size', this[__onSizeChanged])
-      this[_compute]('orientation', 'size', this[__computeOrientation])
-    }
-
-    connectedCallback() {
-      super.connectedCallback()
-      this[_listen](window, 'resize', this[__onResize])
-    }
-
-    disconnectedCallback() {
-      super.disconnectedCallback()
-      this[_unlisten](window, 'resize')
-    }
-
-    [__onResize](e) {
-      this[_debounce]('resize', () => {
-        this.set('size' {
-          height: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
-          width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
-        })
-      }, 200)
-    }
-
-    [__onSizeChanged]() {
-      this[_fire]('size-changed')
-    }
-
-    [__computeOrientation](size) {
-      if (!size) return
-      return (size.width >= size.height) ? 'landscape' : 'portrait'
-    }
-  }
-
-  customElement.define(WindowSize.is, WindowSize)
-}())
-</script>
-```
-
-## API Reference
+<h2>API Reference</h2>
 
 ### Methods
 

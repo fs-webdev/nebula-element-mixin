@@ -22,13 +22,13 @@ Import the package.
 <link rel="import" href="/bower_components/nebula-element-mixin/nebula-element-mixin.html"> 
 ```
 
-Add the mixin to an element.
+Extend the base element using the mixin class factory method.
 
 ```js
 class MyElement extends Nebula.ElementMixin(Polymer.Element) {}
 ```
 
-*For more information, see the API documentation.*
+*For more information, see the API Reference documentation.*
 
 ## Contributing
 

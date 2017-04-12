@@ -22,7 +22,7 @@
   ],
   "main": "nebula-element-mixin.html",
   "pages": {
-    "nebula-element-mixin": "docs/nebula-element-mixin.md"
+    "Nebula.ElementMixin": "docs/nebula-element-mixin.md"
   },
   "dependencies": {
     "polymer": "Polymer/polymer#>=2.0.0-rc.1 <3.0"

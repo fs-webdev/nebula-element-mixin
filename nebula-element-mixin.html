@@ -30,7 +30,8 @@
     return class extends base {
 
     /**
-     * Creates a new instance of the custom element.
+     * Creates a new instance.
+     * @constructor
      */ 
      constructor() {
         super()
@@ -42,7 +43,7 @@
 
       /**
        * Generates a numeric hash for a string for use as an auto-generated key.
-       * @method hash
+       * @method __hash
        * @param {string} source - The string value to hash.
        * @private
        */
@@ -61,7 +62,7 @@
 
       /**
        * Creates a method observer imperatively for the specified expression.
-       * @method observe
+       * @method _observe
        * @param {string} source - The property expression to observe for changes.
        * @param {function()} callback - The function to invoke when the expression is matched.
        * @protected
@@ -93,7 +94,7 @@
 
       /**
        * Creates a computed method imperatively for the specified properties.
-       * @method compute
+       * @method _compute
        * @param {string} target - The name of the target property to compute.
        * @param {string} source - A property observation expression with computed method dependencies.
        * @param {function()} callback - The callback function to invoke when the source expression is matched.
@@ -127,7 +128,7 @@
 
       /**
        * Adds an event listener to the specified target element.
-       * @method listen
+       * @method _listen
        * @param {EventTarget} target - The target element of the event listener.
        * @param {string} eventType - The name of the event type to listen to.
        * @param {function()} callback - The callback function to invoke when the event is triggered.
@@ -147,7 +148,7 @@
 
       /**
       * Removes an event listener.
-      * @method unlisten
+      * @method _unlisten
       * @param {EventTarget} target - The event target to remove the listener from.
       * @param {string} eventType - The name of the event type for the listener to remove.
       * @protected
@@ -166,7 +167,7 @@
       
       /**
       * Collapses multiple function calls into a single invocation within a wait period.
-      * @method debounce
+      * @method _debounce
       * @param {string} jobName - The unique name for the debounce function.
       * @param {function()} callback - The function to invoke when the debounce is complete.
       * @protected
@@ -183,7 +184,7 @@
 
       /**
        * Fires a custom event.
-       * @method fire
+       * @method _fire
        * @param {string} eventType - The name of the event to fire.
        * @param {*} detail - The value to assign the the custom event detail property.
        * @param {Object} options - The event options.
