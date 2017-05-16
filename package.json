@@ -1,6 +1,6 @@
 {
   "name": "nebula-element-mixin",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "A set of custom element utility methods.",
   "license": "ISC",
   "private": true,
@@ -13,6 +13,6 @@
     "test:sauce": "wct --plugin=sauce"
   },
   "devDependencies": {
-    "web-component-tester": "Polymer/web-component-tester#latest"
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0"
   }
 }

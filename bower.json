@@ -18,16 +18,15 @@
     "webcomponents",
     "web-components",
     "customelements",
-    "custom-elements"
+    "custom-elements",
+    "utility",
+    "mixin"
   ],
   "main": "nebula-element-mixin.html",
-  "pages": {
-    "Nebula.ElementMixin": "docs/nebula-element-mixin.md"
-  },
   "dependencies": {
-    "polymer": "Polymer/polymer#>=2.0.0-rc.1 <3.0"
+    "polymer": "Polymer/polymer#^2.0.0"
   },
   "devDependencies": {
-    "web-component-tester": "Polymer/web-component-tester#latest"
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0"
   }
 }

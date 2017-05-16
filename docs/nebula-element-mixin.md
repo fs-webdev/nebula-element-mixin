@@ -2,11 +2,13 @@
 
 `Nebula.ElementMixin` is a Polymer Project [Class Expression Mixin](https://www.polymer-project.org/2.0/docs/devguide/custom-elements#mixins) that extends a custom element with a set of utility methods. 
 
+## Usage
+
 The mixin adds utility functions similar to those provided in Polymer v1 (that were removed in Polymer v2) including `listen` and `unlisten`, `fire`, and `debounce`. It also provides the ability to define property observers and computed properties imperatively using `observe` and `compute`.
 
 The API utilizes [Symbols](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol), a new feature of ES2015 that enables new semantics for protected and private class members. Protected methods are defined using `Symbol.for` to add or retrieve them from the global registry, and private methods are defined using a local `Symbol`. To invoke any of the protected methods of the mixin, retrieve the global symbol, and invoke the computed function name.
 
-<h2>API Reference</h2>
+## API Reference
 
 ### Methods
 
