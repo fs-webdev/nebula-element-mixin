@@ -1,12 +1,9 @@
 # Change Log
 
-## [v2.0.3](https://github.com/arsnebula/nebula-element-mixin/releases/tag/v2.0.3) (PENDING)
+## [v2.0.2](https://github.com/arsnebula/nebula-element-mixin/releases/tag/v2.0.2) (PENDING)
 
 - Refactored to remove underscore naming convention.
 - Updated inline comments to support API documentation generation.
-
-## [v2.0.2](https://github.com/arsnebula/nebula-element-mixin/releases/tag/v2.0.2) (2017-04-12)
-
 - Updated documentation.
 - Fixed minor issues with test configuration.
 
