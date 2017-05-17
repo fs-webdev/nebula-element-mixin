@@ -30,11 +30,16 @@
   /**
    * A custom element class mixin that provides a collection of utility methods.
    *
-   * @polymerBehavior
+   * @polymerMixin
    * @memberof Nebula
    */
   Nebula.ElementMixin = Polymer.dedupingMixin(function(base) {
-    return class ElementMixin extends base {
+    
+    /**
+     * @polymerMixinClass
+     * @implements {Nebula_ElementMixin}
+     */
+    class ElementMixin extends base {
 
     /**
      * Creates a new instance.
@@ -200,6 +205,8 @@
       }
 
     }
+
+    return ElementMixin
   })
   
 }())
